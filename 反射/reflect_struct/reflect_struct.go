@@ -11,8 +11,8 @@ type Person struct{
 	age int
 }
 
-func (p *Person)GetName()string{
-	return p.name
+func (p *Person)GetName(a, b, c int)(string, error){
+	return p.name, nil
 }
 
 func (p *Person)SetAge(age int){
@@ -30,11 +30,13 @@ func main(){
 		for j := 1; j < method.Type.NumIn(); j++ {
 			argv = append(argv, method.Type.In(j).Name())
 		}
-
+		fmt.Println("aaaaaaaa", method.Type.In(0))
 		for j := 0; j < method.Type.NumOut(); j++ {
 			returns = append(returns, method.Type.Out(j).Name())
 		}
 		fmt.Printf("func (w *%s) %s(%s) %s\n",
 			typ.Elem().Name(), method.Name, strings.Join(argv, ","), strings.Join(returns, ","))
 	}
+
+	fmt.Println(reflect.TypeOf((*error)(nil)).Elem())
 }

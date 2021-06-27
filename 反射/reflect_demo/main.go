@@ -65,5 +65,49 @@ func main(){
 	y := v.Interface().(float64)    //将Value类型恢复其接口类型的值  Interface会把type和value信息打包并填充到接口变量中
 	fmt.Println(y, v.Interface())
 
+	//通过反射调用函数
+	funcValue := reflect.ValueOf(add)
+	paramList := []reflect.Value{reflect.ValueOf(10), reflect.ValueOf(20)}
+	retList := funcValue.Call(paramList)
+	fmt.Println(retList[0].Int())
 
+	//通过反射调用结构体方法
+	var setNameStr string = "SetName"
+	//var addAgeStr string = "AddAge"
+
+	user := User{
+		Id: 1,
+		Name: "evn10557",
+		Age: 18,
+	}
+
+	refUser := reflect.TypeOf(&user)
+	fmt.Println(refUser)
+	revUser := reflect.ValueOf(&user)
+
+	setNameMethod, _ := refUser.MethodByName(setNameStr)
+	args := []reflect.Value{revUser, reflect.ValueOf("Mike")}
+	result := setNameMethod.Func.Call(args)
+	fmt.Println(result[0])
+}
+
+func add(a, b int) int{
+	return a + b
+}
+
+type User struct{
+	Id int
+	Name string
+	Age int
+}
+
+func (u *User)SetName(name string)string{
+	oldName := u.Name
+	u.Name = name
+	return oldName
+}
+
+func (u *User)AddAge()bool{
+	u.Age++
+	return true
 }
