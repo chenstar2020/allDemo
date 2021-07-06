@@ -19,5 +19,37 @@ func main() {
 	})
 
 	f1("key1")
+	f1.Get("key2")
+
+	res := GetFromSource(GetterFunc(func(key string)([]byte, error){
+		return []byte(key + "star"), nil
+	}), "abcdd")
+
+	fmt.Println("res:", res)
+
+	GetFromSource(new(DB), "hello")
 }
+
+func GetFromSource(getter Getter, key string)[]byte{
+	buf, err := getter.Get(key)
+	if err == nil{
+		return buf
+	}
+	return nil
+}
+
+type DB struct{  //DB实现Getter接口
+	url string
+}
+
+func (db *DB)Query(sql string, args ...string) string{
+	return "hello"
+}
+
+func (db *DB)Get(key string)([]byte, error){
+	v := db.Query("SELECT name FROM TABLE WHERE name = ?", key)
+	return []byte(v), nil
+}
+
+
 
