@@ -1,16 +1,48 @@
 package main
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+
+	//"github.com/pkg/profile"
+	"strings"
+)
+
+func concat(n int) string {
+/*	s := ""
+	for i := 0; i < n;i++ {
+		s += randomString(n)
+	}
+	return s
+	*/
+
+	var s strings.Builder
+	for i := 0; i < n; i++ {
+		s.WriteString(randomString(n))
+	}
+
+	return s.String()
+}
 
 func main(){
-	num := []int{3, 5, 1, 4, 2, 6}
-	BubbleSort(num)
-	fmt.Println(num)
+/*	f, _ := os.OpenFile("cpu.pprof", os.O_CREATE|os.O_RDWR, 0644)
+	defer f.Close()
+	pprof.StartCPUProfile(f)
+	defer pprof.StopCPUProfile()
+	n := 10
+	for i := 0; i < 5; i++ {
+		nums := Generate(n)
+		BubbleSort(nums)
+		n *= 10
+	}*/
 
-/*	a := 2
-	b := 3
-	a, b = b, a
-	fmt.Println(a, b)*/
+	//defer profile.Start().Stop()
+	//concat(10)
+
+	var buf bytes.Buffer
+	buf.WriteString("aaaaaaaaa")
+	buf.WriteString("bbbbbbbbb")
+	fmt.Println(buf.String())
 }
 
 
