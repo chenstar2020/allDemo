@@ -334,7 +334,7 @@ func Min(a, b int) int{
 
 //简化路径 https://leetcode-cn.com/problems/simplify-path/
 func simplifyPath(path string) string {
-	s := stack.NewStack()
+	s := stack.New()
 	arr := strings.Split(path, "/")
 
 	for _, v := range arr{

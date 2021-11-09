@@ -8,7 +8,7 @@ type Stack struct{
 	lock sync.RWMutex
 }
 
-func NewStack()*Stack{
+func New()*Stack{
 	return &Stack{
 		array: make([]interface{}, 0),
 		size: 0,

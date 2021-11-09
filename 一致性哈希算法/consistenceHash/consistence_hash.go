@@ -1,6 +1,7 @@
 package consistenceHash
 
 import (
+	"container/heap"
 	"hash/crc32"
 	"sort"
 	"strconv"
@@ -72,3 +73,6 @@ func (d *ConsistenceHash)Get(key string)string{
 	return d.hashMap[d.keys[0]]
 }
 
+func (d *ConsistenceHash)Test(){
+	heap.Init()
+}

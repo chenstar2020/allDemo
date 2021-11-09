@@ -3,48 +3,57 @@ package queue
 import "sync"
 
 type Queue struct {
-	array []int
+	array []interface{}
 	size int
 	lock sync.Mutex
 }
 
 func NewQueue()*Queue{
 	return &Queue{
-		array: make([]int, 0),
+		array: make([]interface{}, 0),
 		size: 0,
 		lock: sync.Mutex{},
 	}
 }
 
-func (q *Queue) Add(v int) {
+func (q *Queue) Add(v interface{}) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 	q.array = append(q.array, v)
 	q.size++
 }
 
-func (q *Queue) Remove() int {
+func (q *Queue) Remove() interface{} {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 	if q.size == 0{
-		return 0
+		return nil
 	}
 
-	v := q.array[q.size]
+	v := q.array[0]
 
 	for i := 1; i < q.size;i++{
 		q.array[i-1] = q.array[i]
 	}
 	q.array = q.array[0:q.size -1]
+	q.size--
 
 	return v
+}
+
+func (q *Queue)IsEmpty()bool{
+	return q.size == 0
+}
+
+func (q *Queue)Len()int{
+	return q.size
 }
 
 var _ QueueMethod = (*Queue)(nil)
 
 type QueueMethod interface {
-	Add(v int)
-	Remove()int
+	Add(v interface{})
+	Remove()interface{}
 }
 
 
@@ -72,8 +81,8 @@ func (this *MyCircularQueue) EnQueue(value int) bool {
 		return false
 	}
 
-	this.array[this.front] = value
-	this.front = (this.front + 1) % this.size
+	this.array[this.rear] = value
+	this.rear = (this.rear + 1) % this.size
 
 	return true
 }
@@ -84,7 +93,7 @@ func (this *MyCircularQueue) DeQueue() bool {
 		return false
 	}
 
-	this.rear = (this.rear + 1) % this.size
+	this.front = (this.front + 1) % this.size
 	return true
 }
 
@@ -94,7 +103,7 @@ func (this *MyCircularQueue) Rear() int {
 		return -1
 	}
 
-	return this.array[(this.size + this.front - 1) % this.size]
+	return this.array[(this.size + this.rear - 1) % this.size]
 }
 
 
@@ -102,7 +111,7 @@ func (this *MyCircularQueue) Front() int {
 	if this.IsEmpty(){
 		return -1
 	}
-	return this.array[this.rear]
+	return this.array[this.front]
 }
 
 
@@ -112,7 +121,7 @@ func (this *MyCircularQueue) IsEmpty() bool {
 
 
 func (this *MyCircularQueue) IsFull() bool {
-	return (this.front + 1) % this.size == this.rear
+	return (this.rear + 1) % this.size == this.front
 }
 
 
